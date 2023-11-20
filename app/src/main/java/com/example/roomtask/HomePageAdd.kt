@@ -16,14 +16,22 @@ class HomePageAdd : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Menggunakan ViewBinding untuk mengakses tampilan layout activity_home_page_add.xml
         binding = ActivityHomePageAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Membuat ExecutorService dengan satu thread untuk melakukan operasi database secara asinkron
         executorService = Executors.newSingleThreadExecutor()
+
+        // Mendapatkan instance dari database menggunakan NoteRoomDatabase
         val db = NoteRoomDatabase.getDatabase(this)
+
+        // Menginisialisasi NoteDao dari database
         mNotesDao = db!!.noteDao()!!
 
-        binding.btnCreate.setOnClickListener{
+        // Menambahkan OnClickListener pada tombol btnCreate
+        binding.btnCreate.setOnClickListener {
+            // Memanggil fungsi insert dengan membuat objek Note baru dari input pengguna
             insert(
                 Note(
                     title = binding.etTitle.text.toString(),
@@ -31,11 +39,14 @@ class HomePageAdd : AppCompatActivity() {
                     date = binding.etDate.text.toString(),
                 )
             )
+
+            // Menutup activity setelah berhasil menyimpan catatan
             finish()
         }
     }
 
-    private fun insert(note: Note){
-        executorService.execute{mNotesDao.insert(note)}
+    // Fungsi untuk menyisipkan catatan ke dalam database menggunakan ExecutorService
+    private fun insert(note: Note) {
+        executorService.execute { mNotesDao.insert(note) }
     }
 }

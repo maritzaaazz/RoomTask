@@ -5,18 +5,23 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity("note_table")
+// Mendeklarasikan kelas data "Note" sebagai entitas yang akan disimpan dalam database Room
+@Entity(tableName = "note_table")
 data class Note(
+    // Menentukan kolom utama dan menyertakan opsi untuk menghasilkan nilai id secara otomatis
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    val id: Int=0,
+    val id: Int = 0,
 
-    @ColumnInfo(name="title")
+    // Menentukan nama kolom "title" dalam tabel database
+    @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name="description")
+    // Menentukan nama kolom "description" dalam tabel database
+    @ColumnInfo(name = "description")
     val description: String,
 
-    @ColumnInfo(name="date")
+    // Menentukan nama kolom "date" dalam tabel database
+    @ColumnInfo(name = "date")
     val date: String
 )

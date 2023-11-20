@@ -18,25 +18,31 @@ class HomePageUpdate : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Menggunakan ViewBinding untuk meng-inflate layout
         binding = ActivityHomePageUpdateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Mendapatkan data yang dikirim dari activity sebelumnya menggunakan Intent extras
         val bundle: Bundle? = intent.extras
         id = bundle!!.getInt("EXT_ID")!!
         val title = bundle!!.getString("EXT_TITLE")!!
         val description = bundle!!.getString("EXT_DESCRIPTION")!!
         val date = bundle!!.getString("EXT_DATE")!!
 
+        // Menginisialisasi ExecutorService untuk tugas latar belakang dan mendapatkan NoteDao dari RoomDatabase
         executorService = Executors.newSingleThreadExecutor()
         val db = NoteRoomDatabase.getDatabase(this)
         mNotesDao = db!!.noteDao()!!
 
-        with(binding){
+        with(binding) {
+            // Mengatur nilai EditText dengan data yang diterima
             etTitle.setText(title)
             etDescription.setText(description)
             etDate.setText(date)
 
-            btnUpdate.setOnClickListener{
+            // Mengatur OnClickListener untuk tombol Update
+            btnUpdate.setOnClickListener {
+                // Memanggil fungsi update dengan objek Note baru dan menyelesaikan aktivitas
                 update(
                     Note(
                         id = id,
@@ -49,7 +55,9 @@ class HomePageUpdate : AppCompatActivity() {
                 finish()
             }
 
-            btnDelete.setOnClickListener{
+            // Mengatur OnClickListener untuk tombol Delete
+            btnDelete.setOnClickListener {
+                // Memanggil fungsi delete dengan objek Note yang sudah ada dan menyelesaikan aktivitas
                 delete(
                     Note(
                         id = id,
@@ -64,11 +72,13 @@ class HomePageUpdate : AppCompatActivity() {
         }
     }
 
-    private fun update(note: Note){
-        executorService.execute{mNotesDao.update(note)}
+    // Fungsi untuk memperbarui catatan di latar belakang menggunakan ExecutorService
+    private fun update(note: Note) {
+        executorService.execute { mNotesDao.update(note) }
     }
 
-    private fun delete(note: Note){
-        executorService.execute{mNotesDao.delete(note)}
+    // Fungsi untuk menghapus catatan di latar belakang menggunakan ExecutorService
+    private fun delete(note: Note) {
+        executorService.execute { mNotesDao.delete(note) }
     }
 }
